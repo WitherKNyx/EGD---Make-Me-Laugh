@@ -7,12 +7,13 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Unity.VisualScripting.Antlr3.Runtime;
 
 public class DialogueManager : MonoBehaviour
 {
 	#region Static Variables
 	[HideInInspector]
-    public static DialogueManager instance;
+	public static DialogueManager instance;
 
 	/// <summary>
 	/// This variable is used to block interactions while dialogue is occuring
@@ -46,14 +47,14 @@ public class DialogueManager : MonoBehaviour
 	private string _text;
 	private int _choice = -1;
 
-    #region System Functions
-    private void Awake()
+	#region System Functions
+	private void Awake()
 	{
 		if (instance == null)
 		{
 			instance = this;
-            DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += OnSceneChange;
+			DontDestroyOnLoad(gameObject);
+			SceneManager.sceneLoaded += OnSceneChange;
 		}
 		else
 			Destroy(gameObject);
@@ -67,7 +68,7 @@ public class DialogueManager : MonoBehaviour
 	private void Update()
 	{
 		if (GameManager.IsPaused) return;
-        if (Input.GetMouseButtonDown(0) && _currentLine != null)
+		if (Input.GetMouseButtonDown(0) && _currentLine != null)
 		{
 			StopCoroutine(_currentLine);
 			_currentLine = null;
@@ -209,7 +210,31 @@ public class DialogueManager : MonoBehaviour
 			yield return null;
 
 			// Ensure the dialogue box contains all text, then wait for user input
-			_dialogueTextBox.text = lines[i];
+			_text = lines[i];
+
+			// Convert any escape characters necessary
+			/*
+			int idx = _text.IndexOf('\\');
+			while (idx != -1)
+			{
+				string letter = _text[idx].ToString();
+				switch (_text[idx])
+				{
+					case '<':
+						letter = "<"; break;
+					case 'n':
+						letter = "\n"; break;
+					case 't':
+						letter = "\t"; break;
+					case '\\':
+						letter = "\\"; break;
+				}
+				_text.Remove(idx, 2);
+				_text.Insert(idx, letter);
+				idx = _text.IndexOf("\\");
+			}
+			*/
+			_dialogueTextBox.text = _text;
 			while (true)
 			{
 				if (Input.GetMouseButtonDown(0))
@@ -240,7 +265,7 @@ public class DialogueManager : MonoBehaviour
 			if (line[j - 1] == ' ')
 			{
 				int nextSpace = line.IndexOf(' ', j);
-                nextSpace = nextSpace == -1 ? line.Length : nextSpace;
+				nextSpace = nextSpace == -1 ? line.Length : nextSpace;
 				string nextWord = line[j..nextSpace];
 				string currText = _dialogueTextBox.text;
 				_dialogueTextBox.text += nextWord;
@@ -258,13 +283,33 @@ public class DialogueManager : MonoBehaviour
 				multiplier = 4;
 
 			yield return new WaitForSeconds(multiplier * _timeInterval);
-			char letter = line[j];
+			string letter = line[j].ToString();
 			if (line[j] == '\\')
 			{
-				if (line[j + 1] == '<') letter = '<';
-				else if (line[j + 1] == 'n') letter = '\n';
-				else if (line[j + 1] == 't') letter = '\t';
+				switch (line[j])
+				{
+					case '<':
+						letter = "<"; break;
+					case 'n':
+						letter = "\n"; break;
+					case 't':
+						letter = "\t"; break;
+					case '\\':
+						letter = "\\"; break;
+				}
 				++j;
+			} 
+			else if (line[j] == '<')
+			{
+				if (line[j + 1] == 'i' || line[j + 1] == 'b')
+				{
+					letter = string.Format("<{0}>", line[j + 1]);
+					j += 2;
+				} else if (line[j + 1] == '/' && (line[j + 2] == 'i' || line[j + 2] == 'b'))
+				{
+					letter = string.Format("</{0}>", line[j + 2]);
+					j += 3;
+				}
 			}
 			_dialogueTextBox.text += letter;
 		}

@@ -1,5 +1,5 @@
 <speaker="Stella" sprite="happy">
-This is my first line.
+This is my <i>first</i> line.
 This is my second line.\nThis is on a new line.
 <sprite="flushed1">
 This is a choice!
