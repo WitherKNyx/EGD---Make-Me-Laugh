@@ -44,7 +44,15 @@ public class LoveMeter : MonoBehaviour
 
 	private void Update()
 	{
-		_Image.sprite = _sprites[_loveValue];
+		if (_loveValue == MAX_LOVE + 1) return;
+		if (_Image.sprite != _sprites[_loveValue])
+			_Image.sprite = _sprites[_loveValue];
+		else if (_loveValue == MAX_LOVE)
+		{
+			_loveValue++;
+			DialogueManager.instance.StartNewDialogue(Resources.Load<Dialogue>("DialogueSO/WinDialogue"));
+		}
+			
 	}
 	#endregion
 

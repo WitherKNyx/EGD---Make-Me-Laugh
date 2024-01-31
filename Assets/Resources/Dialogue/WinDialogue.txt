@@ -1,0 +1,5 @@
+<speaker="Stella" sprite="flushed1">
+Line 1.
+<sprite="flushed2">
+Line 2?
+<event="LoadScene" arg="WinScene">
