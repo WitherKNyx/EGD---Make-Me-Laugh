@@ -54,7 +54,7 @@ public class LoveMeter : MonoBehaviour
 
 	public void ResetMistakes() => _mistakes = 0;
 
-	public void AddLove(int loveValue) => _loveValue = Mathf.Min(loveValue + _loveValue, MAX_LOVE);
+	public void AddLove(int loveValue) => _loveValue = Mathf.Clamp(loveValue + _loveValue, 0, MAX_LOVE);
 
 	public void AddMistake() => _mistakes = Mathf.Min(_mistakes + 1, MAX_MISTAKES);
 }

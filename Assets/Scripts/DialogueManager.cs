@@ -66,7 +66,8 @@ public class DialogueManager : MonoBehaviour
 
 	private void Update()
 	{
-		if (Input.GetMouseButtonDown(0) && _currentLine != null)
+		if (GameManager.IsPaused) return;
+        if (Input.GetMouseButtonDown(0) && _currentLine != null)
 		{
 			StopCoroutine(_currentLine);
 			_currentLine = null;
@@ -220,6 +221,12 @@ public class DialogueManager : MonoBehaviour
 
 		_dialogueBox.SetActive(false);
 		inDialogue = false;
+
+		if (dialogue.nextDialogue != null)
+		{
+			yield return new WaitForSeconds(1.5f);
+			StartCoroutine(PlayDialogue(dialogue.nextDialogue));
+		}
 	}
 
 	public IEnumerator ProcessLine(string line)
