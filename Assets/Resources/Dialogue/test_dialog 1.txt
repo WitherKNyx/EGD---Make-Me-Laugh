@@ -1,0 +1,102 @@
+Ever since the pandemic, I've been finding it harder to go outside. 
+After all, it was mandated, so I just... didn't. 
+Even after the mandates lifted, I was too busy playing video games to go outside. 
+"I'm just being safe," I thought. But weeks turned into months, and eventually I discovered a year had passed. 
+But it didn't matter to me. 
+Until my friend messaged me recently. 
+"I've set up a speed dating competition for you," she said. 
+"<i>Please</i> get outside," the message continued. "You need to talk to real men and women."
+It didn't really matter my opinion on the matter, though, because she showed up to my door later that evening anyway.
+"I don't need to talk to anyone," I had pleaded, but she looked at me with disappointed eyes anyway. 
+"You log an average of 12 hours on League of Legends every day. You're <i>going.</i>"
+And so...
+<speaker="Stella" sprite="happy">
+"Hey, are you the person I'm supposed to meet?"
+<sprite="flushed1">
+This is that 'speed dating' thingy I saw online, yeah?
+I'm surprised someone would have the guts to make an ad like that. Aren't you afraid of creeps?
+<i>Just what did my friend post?!</i>
+<choice>
+	<Choice1> Uhhh....
+	<Choice2> Yeah...
+</choice>
+<label="Choice1">
+<i>Crap. She's way out of my league.</i> 
+<end>
+<label="Choice2">
+<i>Crap. She's way out of my league.</i> 
+<end>
+<speaker="Stella" sprite="happy">
+Well, I can't fault you for being nervous...
+So... what hobbies do you have?
+<choice>
+	<Choice5>Well, I play a lot of League...
+	<Choice6>So there's this anime...
+</choice>
+<label="Choice5">
+<event="LoveMeter" arg="+3">
+Her eyes shine. 
+<speaker="Stella" sprite="flushed">
+You play League too!?
+Wow, I never thought I'd meet someone who'd admit to playing that game!
+I'm really bad at it, though. I'm only silver. 
+Even my friends make fun of me for it, haha. 
+<choice>
+	<Choice7> That's why I don't have friends. 
+	<Choice8> I can totally carry you. 
+</choice>
+<label="Choice7">
+<speaker="Stella" sprite="happy">
+<event="LoveMeter" arg="-3">
+Ooh... sorry about that.
+<end>
+<label="Choice8">
+<speaker="Stella" sprite="happy">
+You can? 
+Hm... but you don't look very strong. 
+I guess you can try? 
+<i>It doesn't seem as if she knows that term...</i>
+<choice>
+	<Choice9> Yeah, I can lift you.
+	<Choice10> No, like, the gamer term.
+</choice>
+<label="Choice9">
+<speaker="Stella" sprite="mad">
+<event="LoveMeter" arg="-3">
+You foolishly try to lift her, and you drop her almost immediately. 
+<speaker="You"> 
+Whoops. 
+<end>
+<label="Choice10">
+<speaker="You"> 
+You explain the term to her. 
+<speaker="Stella" sprite="happy">
+Oh, so that's what that means? 
+Well, you learn something new everyday! 
+I wouldn't be opposed to playing a game with you, you know. 
+<speaker="Stella" sprite="flushed">
+I don't really show that part of myself to many people, so I'm happy we have that in common.
+Haha, maybe we can make it a date? 
+<speaker="You">
+<i>How did I pull that off?!</i>
+<event="LoveMeter" arg="+3">
+<end>
+<label="Choice6">
+<speaker="You">
+Before you're even aware of it, your mouth begins to move on its own. 
+So there's this guy named Monkey D. Luffy, and essentially, he's trying to find this thing called the One Piece. 
+But like, no one knows what the One Piece is, but apparetly it's super powerful. Oh, they're also pirates-- I say they because there's a whole ragtag
+group of peeople he meets along the way like Nami and Zoro and Robin, and...
+<speaker="Stella" sprite="happy">
+I guess that sounds interesti--
+<speaker="You">
+Oh, and they're all pirates, so they travel the open seas to seach for this treasure, like pirates do, yeah? 
+And they have these superpowers called Devil Fruit, and...
+...
+<speaker="Stella" sprite="mad">
+... 
+You realize you've been talking for twenty minutes now.
+Oops.
+<event="LoveMeter" arg="-3">
+<end>
+
