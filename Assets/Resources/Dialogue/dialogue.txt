@@ -1,3 +1,4 @@
+<speaker="You">
 Ever since the pandemic, I've been finding it harder to go outside. 
 After all, it was mandated, so I just... didn't. 
 Even after the mandates lifted, I was too busy playing video games to go outside. 
@@ -22,10 +23,18 @@ I'm surprised someone would have the guts to make an ad like that. Aren't you af
 </choice>
 <label="Choice1">
 <i>Crap. She's way out of my league.</i> 
-<end>
+<jump="1">
+
+
+
+
 <label="Choice2">
 <i>Crap. She's way out of my league.</i> 
-<end>
+<jump="1">
+
+
+
+<label="1">
 <speaker="Stella" sprite="happy">
 Well, I can't fault you for being nervous...
 So... what hobbies do you have?
@@ -36,7 +45,7 @@ So... what hobbies do you have?
 <label="Choice5">
 <event="LoveMeter" arg="+3">
 Her eyes shine. 
-<speaker="Stella" sprite="flushed">
+<speaker="Stella" sprite="flushed2">
 You play League too!?
 Wow, I never thought I'd meet someone who'd admit to playing that game!
 I'm really bad at it, though. I'm only silver. 
@@ -49,6 +58,7 @@ Even my friends make fun of me for it, haha.
 <speaker="Stella" sprite="happy">
 <event="LoveMeter" arg="-3">
 Ooh... sorry about that.
+<event="LoadScene" arg="MainMenu">
 <end>
 <label="Choice8">
 <speaker="Stella" sprite="happy">
@@ -66,6 +76,7 @@ I guess you can try?
 You foolishly try to lift her, and you drop her almost immediately. 
 <speaker="You"> 
 Whoops. 
+<event="LoadScene" arg="MainMenu">
 <end>
 <label="Choice10">
 <speaker="You"> 
@@ -74,11 +85,12 @@ You explain the term to her.
 Oh, so that's what that means? 
 Well, you learn something new everyday! 
 I wouldn't be opposed to playing a game with you, you know. 
-<speaker="Stella" sprite="flushed">
+<speaker="Stella" sprite="flushed1">
 I don't really show that part of myself to many people, so I'm happy we have that in common.
 Haha, maybe we can make it a date? 
 <speaker="You">
 <i>How did I pull that off?!</i>
+<event="LoadScene" arg="WinScene">
 <event="LoveMeter" arg="+3">
 <end>
 <label="Choice6">
@@ -98,5 +110,6 @@ And they have these superpowers called Devil Fruit, and...
 You realize you've been talking for twenty minutes now.
 Oops.
 <event="LoveMeter" arg="-3">
+<event="LoadScene" arg="MainMenu">
 <end>
 

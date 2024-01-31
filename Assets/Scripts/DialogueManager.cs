@@ -147,6 +147,26 @@ public class DialogueManager : MonoBehaviour
 					);
 				}
 
+				
+				start = lines[i].IndexOf("jump=\"");
+				if (start != -1) {
+					start+=6;
+					end = lines[i].IndexOf('"', start);
+					string jumpLabel = lines[i][start..end];
+					string label = "<label=\"" + jumpLabel + "\">";
+					for (int j = 0; j < lines.Length; j++)
+					{
+						start = lines[j].IndexOf(label);
+						if (start != -1)
+						{
+							i = j;
+							_choice = -1;
+							_clickSound.Play();
+							break;
+						}
+					}
+				}
+
 				start = lines[i].IndexOf("event=\"");
 				if (start != -1)
 				{
