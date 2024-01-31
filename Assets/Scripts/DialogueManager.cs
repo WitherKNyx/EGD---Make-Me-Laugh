@@ -34,6 +34,9 @@ public class DialogueManager : MonoBehaviour
 
 	[SerializeField]
 	private TextMeshProUGUI[] _dialogueChoiceTextBoxes;
+
+	[SerializeField]
+	private AudioSource _talkingSound, _clickSound;
 	#endregion
 
 	[SerializeField, Min(0f), Tooltip("Time interval between each character appearing in the textbox.")]
@@ -193,6 +196,7 @@ public class DialogueManager : MonoBehaviour
 						{
 							i = j;
 							_choice = -1;
+							_clickSound.Play();
 							break;
 						}
 					}
@@ -213,27 +217,10 @@ public class DialogueManager : MonoBehaviour
 			_text = lines[i];
 
 			// Convert any escape characters necessary
-			/*
-			int idx = _text.IndexOf('\\');
-			while (idx != -1)
-			{
-				string letter = _text[idx].ToString();
-				switch (_text[idx])
-				{
-					case '<':
-						letter = "<"; break;
-					case 'n':
-						letter = "\n"; break;
-					case 't':
-						letter = "\t"; break;
-					case '\\':
-						letter = "\\"; break;
-				}
-				_text.Remove(idx, 2);
-				_text.Insert(idx, letter);
-				idx = _text.IndexOf("\\");
-			}
-			*/
+			_text = _text.Replace("\\<", "<");
+			_text = _text.Replace("\\n", "\n");
+			_text = _text.Replace("\\t", "\t");
+			_text = _text.Replace("\\\\", "\\");
 			_dialogueTextBox.text = _text;
 			while (true)
 			{
@@ -241,6 +228,7 @@ public class DialogueManager : MonoBehaviour
 					break;
 				yield return null;
 			}
+			_clickSound.Play();
 			_continueIndicator.enabled = false;
 		}
 
@@ -281,37 +269,44 @@ public class DialogueManager : MonoBehaviour
 				multiplier = 2;
 			else if (char.IsPunctuation(line[j - 1]) && line[j -1 ] != '\'' && line[j - 1] != '"')
 				multiplier = 4;
+			else
+				_talkingSound.Play();
 
 			yield return new WaitForSeconds(multiplier * _timeInterval);
-			string letter = line[j].ToString();
-			if (line[j] == '\\')
+			char letter = line[j];
+			if (letter == '\\')
 			{
-				switch (line[j])
+				switch (line[j + 1])
 				{
 					case '<':
-						letter = "<"; break;
+						letter = '<'; break;
 					case 'n':
-						letter = "\n"; break;
+						letter = '\n'; break;
 					case 't':
-						letter = "\t"; break;
+						letter = '\t'; break;
 					case '\\':
-						letter = "\\"; break;
+						letter = '\\'; break;
 				}
+				_dialogueTextBox.text += letter;
 				++j;
 			} 
 			else if (line[j] == '<')
 			{
+				string block = "";
 				if (line[j + 1] == 'i' || line[j + 1] == 'b')
 				{
-					letter = string.Format("<{0}>", line[j + 1]);
+					block = string.Format("<{0}>", line[j + 1]);
 					j += 2;
 				} else if (line[j + 1] == '/' && (line[j + 2] == 'i' || line[j + 2] == 'b'))
 				{
-					letter = string.Format("</{0}>", line[j + 2]);
+					block = string.Format("</{0}>", line[j + 2]);
 					j += 3;
 				}
+				_dialogueTextBox.text += block;
+			} else
+			{
+				_dialogueTextBox.text += line[j];
 			}
-			_dialogueTextBox.text += letter;
 		}
 		_currentLine = null;
 	}
