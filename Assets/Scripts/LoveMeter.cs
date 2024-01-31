@@ -6,6 +6,8 @@ public class LoveMeter : MonoBehaviour
 	private const int MAX_LOVE = 5;
 	private const int MAX_MISTAKES = 3;
 
+	public static LoveMeter Instance;
+
 	#region Properties
 	public int LoveValue { get { return _loveValue; } }
 
@@ -28,6 +30,15 @@ public class LoveMeter : MonoBehaviour
 	#region System Functions
 	private void Awake()
 	{
+		if (Instance != null)
+		{
+			Destroy(gameObject);
+		}
+		else
+		{
+			Instance = this;
+			DontDestroyOnLoad(gameObject);
+		}
 		ResetValues();
 	}
 

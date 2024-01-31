@@ -11,22 +11,22 @@ public class GameCanvas : MonoBehaviour
 
 		if (Instance != null)
 		{
-			Destroy(this.gameObject);
+			Destroy(gameObject);
 		}
 		else
 		{
 			Instance = this;
-			DontDestroyOnLoad(this.gameObject);
+			DontDestroyOnLoad(gameObject);
 		}
 
 	}
 
 	public void EnableCanvas()
 	{
-		this.gameObject.SetActive(false);
+		gameObject.SetActive(false);
 	}
 	public void DisableCanvas()
 	{
-		this.gameObject.SetActive(false);
+		gameObject.SetActive(false);
 	}
 }

@@ -1,0 +1,24 @@
+<speaker="Stella" sprite="happy">
+This is my first line.
+This is my second line.\nThis is on a new line.
+<sprite="flushed1">
+This is a choice!
+<choice>
+	<Choice1>First choice
+	<Choice2>Second choice
+</choice>
+<label="Choice1">
+<event="LoveMeter" arg="+1">
+Here is a second choice!
+<choice>
+	<Choice1>Reusing the same label!
+	<Choice3>And a new label!
+</choice>
+<label="Choice3">
+<event="LoveMeter" arg="+3">
+Labels don't need to be in order
+<end>
+<label="Choice2">
+<event="LoveMeter" arg="-3">
+Goodbye!
+<end>

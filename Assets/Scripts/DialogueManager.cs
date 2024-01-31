@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -30,7 +32,7 @@ public class DialogueManager : MonoBehaviour
 	private TextMeshProUGUI _nameTextBox, _dialogueTextBox;
 
 	[SerializeField]
-	private TextMeshProUGUI[] _dialogueChoiceBoxes;
+	private TextMeshProUGUI[] _dialogueChoiceTextBoxes;
 	#endregion
 
 	[SerializeField, Min(0f), Tooltip("Time interval between each character appearing in the textbox.")]
@@ -55,6 +57,11 @@ public class DialogueManager : MonoBehaviour
 		}
 		else
 			Destroy(gameObject);
+	}
+
+	private void Start()
+	{
+		StartCoroutine(PlayDialogue(test));
 	}
 
 	private void Update()
@@ -89,12 +96,13 @@ public class DialogueManager : MonoBehaviour
 	{
 		inDialogue = true;
 		_dialogueBox.SetActive(true);
-
+		string filepath = string.Format("Dialogue/{0}", dialogue.fileName);
 		// Split dialogue into lines for parsing
-		string[] lines = dialogue.text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+		
+		string[] lines = Resources.Load<TextAsset>(filepath).text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
 		for (int i = 0; i < lines.Length; i++)
 		{
-			// Tag beginning a line indicates a sprite/speaker change
+			// Tag beginning a line indicates special behavior
 			if (lines[i][0] == '<')
 			{
 				int start, end;
@@ -109,7 +117,7 @@ public class DialogueManager : MonoBehaviour
 				start = lines[i].IndexOf("speaker=\"");
 				if (start != -1)
 				{
-					start += 10;
+					start += 9;
 					end = lines[i].IndexOf('"', start);
 					_nameTextBox.text = lines[i][start..end];
 				}
@@ -118,37 +126,67 @@ public class DialogueManager : MonoBehaviour
 				start = lines[i].IndexOf("sprite=\"");
 				if (start != -1)
 				{
-					start += 9;
+					start += 8;
 					end = lines[i].IndexOf('"', start);
-					_nameTextBox.text = lines[i][start..end];
+					_dialoguePortrait.sprite = Resources.Load<Sprite>(
+						string.Format("Sprites/{0}_{1}", _nameTextBox.text, lines[i][start..end])
+					);
+				}
+
+				start = lines[i].IndexOf("event=\"");
+				if (start != -1)
+				{
+					start += 7;
+					end = lines[i].IndexOf('"', start);
+					string funcEvent = lines[i][start..end];
+					string arg = "";
+					start = lines[i].IndexOf("arg=\"");
+					if (start != -1)
+					{
+						start += 5;
+						end = lines[i].IndexOf('"', start);
+						arg = lines[i][start..end];
+					}
+					if (funcEvent == "LoveMeter")
+					{
+						if (int.TryParse(arg, out int res))
+							LoveMeter.Instance.AddLove(res);
+						else
+							Debug.LogError("LoveMete event expects an int!");
+					}
 				}
 
 				start = lines[i].IndexOf("<choice>");
 				if (start != -1)
 				{
+					_dialogueTextBox.text = "";
 					++i;
 					// Obtain choices and jump Labels
 					List<string> labels = new();
 					List<string> choices = new();
-					while (lines[i] != "</choice>")
+					while (lines[i].IndexOf("</choice>") != 0)
 					{
-						start = lines[i].IndexOf("<");
+						start = lines[i].IndexOf("<") + 1;
 						end = lines[i].IndexOf(">");
 						labels.Add(lines[i][start..end]);
 						choices.Add(lines[i][(end + 1)..]);
 						++i;
 					}
 
-					for (int j = 0; j < Mathf.Min(choices.Count, _dialogueChoiceBoxes.Length); j++)
+					for (int j = 0; j < Mathf.Min(choices.Count, _dialogueChoiceTextBoxes.Length); j++)
 					{
-						_dialogueChoiceBoxes[j].text = choices[j];
+						_dialogueChoiceTextBoxes[j].transform.parent.gameObject.SetActive(true);
+						_dialogueChoiceTextBoxes[j].text = choices[j];
 					}
+					for (int j = choices.Count; j < _dialogueChoiceTextBoxes.Length; j++)
+						_dialogueChoiceTextBoxes[j].transform.parent.gameObject.SetActive(false);
 					_dialogueChoices.SetActive(true);
 					yield return new WaitUntil(() => _choice != -1);
 					_dialogueChoices.SetActive(false);
+					string label = "<label=\"" + labels[_choice] + "\">";
 					for (int j = 0; j < lines.Length; j++)
 					{
-						start = lines[i].IndexOf("<label=\"" + labels[_choice] + "\">");
+						start = lines[j].IndexOf(label);
 						if (start != -1)
 						{
 							i = j;
@@ -157,8 +195,8 @@ public class DialogueManager : MonoBehaviour
 						}
 					}
 				}
-				// Skip to next line for actual dialogue
-				++i;
+
+				continue;
 			}
 
 			// Wait until the current line is processed before moving on
@@ -219,6 +257,7 @@ public class DialogueManager : MonoBehaviour
 				if (line[j + 1] == '<') letter = '<';
 				else if (line[j + 1] == 'n') letter = '\n';
 				else if (line[j + 1] == 't') letter = '\t';
+				++j;
 			}
 			_dialogueTextBox.text += letter;
 		}
