@@ -46,4 +46,9 @@ public class GameManager : MonoBehaviour
 		Application.Quit();   
 #endif
 	}
+
+	public static void LoadScene(string sceneName)
+	{
+		SceneManager.LoadScene(sceneName);
+	}
 }

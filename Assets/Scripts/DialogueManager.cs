@@ -93,12 +93,21 @@ public class DialogueManager : MonoBehaviour
 		}
 	}
 
+	public void StartNewDialogue(Dialogue dialogue)
+	{
+		StopAllCoroutines();
+		_currentLine = null;
+		inDialogue = false;
+		StartCoroutine(PlayDialogue(dialogue));
+	}
+
 	/// <summary>
 	/// Function to play a give Dialogue object
 	/// </summary>
 	/// <param name="dialogue"></param>
 	public IEnumerator PlayDialogue(Dialogue dialogue)
 	{
+		Debug.Log(dialogue.name);
 		inDialogue = true;
 		_dialogueBox.SetActive(true);
 		string filepath = string.Format("Dialogue/{0}", dialogue.fileName);
@@ -157,7 +166,11 @@ public class DialogueManager : MonoBehaviour
 						if (int.TryParse(arg, out int res))
 							LoveMeter.Instance.AddLove(res);
 						else
-							Debug.LogError("LoveMete event expects an int!");
+							Debug.LogError("LoveMeter event expects an int!");
+					} else if (funcEvent == "LoadScene")
+					{
+						inDialogue = false;
+						GameManager.LoadScene(arg);
 					}
 				}
 
